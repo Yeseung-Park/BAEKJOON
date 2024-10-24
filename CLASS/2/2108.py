@@ -34,7 +34,7 @@ max_count = max(num_count_dict.items(), key=lambda x: x[1])
 max_list = []
 
 for key, value in num_count_dict.items():
-    if value == max_count:
+    if value == max_count[1]:
         max_list.append(key)
 
 if len(max_list) == 1:

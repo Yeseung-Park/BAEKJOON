@@ -7,25 +7,29 @@ fruits = list((map(int, input().split())))
 
 maximum = 0
 
-def remove(start, end):
-    # 먼저 앞에서 빼주고 뒤에서 빼주면 될 것 같은디...
-    # deque을 이용할까
-    # 그런데 시간이 너무 오래 걸리니까 인덱스로 생각해야한다.
-    # start는 시작 인덱스 end는 마지막 인덱스
-    global maximum
+count = {}
+# 과일의 종류랑 개수를 담을 딕셔너리
 
-    if end - start < 2:    # 여기서부터는 더 이상 찾을 필요가 없다.
-        maximum = max(end-start, maximum)
-        return
+# 슬라이딩 윈도우 기법을 사용하라.
+# 슬라이딩 윈도우 기법
+# 시작과 끝 포인터를 조절하여 두 종류의 과일만 포함된 연속 구간의 길이를 계산
+# 시작 지점은 0에서 시작하고 끝 지점은 점점 키운다.
 
-    if len(set(fruits[start:end])) <= 2:
-        if len(fruits[start:end]) > maximum:
-            maximum = len(fruits[start:end])
-        return
+start = 0
 
-    remove(start+1, end)    # 앞에서 제거
-    remove(start, end-1)    # 뒤에서 제거
+for end in range(N):
+    count[fruits[end]] = count.get(fruits[end], 0) + 1
 
-remove(0, N)
+    while len(count) > 2:    # 과일의 개수가 두 종류 이상이면 시작점을 바꿔서 범위를 좁힌다.
+        count[fruits[start]] -= 1
+        if count[fruits[start]] == 0:    # 0이 됐으면 과일 제거
+            del count[fruits[start]]
+        start += 1    # 범위 좁히기
+
+    # 여기까지 왔으면 과일의 개수가 두 종류 이상이 아니라는 것이며 이때 과일의 개수를 체크해야 한다.
+    maximum = max(maximum, end - start + 1)
+
+# 이걸 끝 점이 과일 배열의 끝까지 될 때까지 반복하면 최댓값을 구할 수 있다.
+# 솔직히 GPT가 알려준거라 나중에 다시 풀어봐야 할 듯
 
 print(maximum)
